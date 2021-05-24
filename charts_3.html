@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- prepare a DOM container with width and height -->
+    <div id="main" style="width: 700px;height:600px;"></div>
+    <script type="text/javascript">
+        // based on prepared DOM, initialize echarts instance
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // specify chart configuration item and data
+        var datas = [
+            ////////////////////////////////////////
+            [
+                { name: 'Bus journeys', value: 166.16, itemStyle:{color:'#d95850'}},
+                { name: 'Underground journeys', value: 92.16, itemStyle:{color:'#27727b'}},
+                { name: 'DLR Journeys', value: 7.79, itemStyle:{color:'#fcce10'}},
+                { name: 'Tram Journeys', value: 2.10 ,itemStyle:{color:'#e87c25'}},
+                { name: 'Overground Journeys', value: 11.26 ,itemStyle:{color:'#b5c334'}},
+            ],
+            
+            ////////////////////////////////////////
+            [
+                { name: 'Bus journeys', value: 70.83 ,itemStyle:{color:'#d95850'}},
+                { name: 'Underground journeys', value: 25.5 ,itemStyle:{color:'#27727b'}},
+                { name: 'DLR Journeys', value: 3.28 ,itemStyle:{color:'#fcce10'}},
+                { name: 'Tram Journeys', value: 0.94 ,itemStyle:{color:'#e87c25'}},
+                { name: 'Overground Journeys', value: 5.16 ,itemStyle:{color:'#b5c334'}},
+            ]
+        ];
+        
+        var option = {
+            title: [{
+                text: 'London Public Transport Journeys by Type',
+                left: 'center',
+                textStyle: {
+                    color: 'black',
+                    fontWeight: '700',
+                    fontFamily:'Microsoft yahei',
+                    fontSize: 20,
+                    align:'center'
+                },           
+            },{
+                subtext:'Year 2010 - 2021',
+                left:'50%',
+                top:'43%',
+                textAlign:'center',
+                subtextStyle:{
+                    color: 'black',
+                    fontWeight: '600',
+                    fontFamily:'Microsoft yahei',
+                    fontSize: 15,
+                    align:'center'
+                }},
+               {
+                subtext:'Year 2020 - 2021 (COVID-19)',
+                left:'50%',
+                top:'76%',
+                textAlign:'center',
+                subtextStyle:{
+                    color: 'black',
+                    fontWeight: '600',
+                    fontFamily:'Microsoft yahei',
+                    fontSize: 15,
+                    align:'center'
+
+               },
+                
+               }],
+
+            series: datas.map(function (data, idx) {
+                var top = idx * 33.3;
+                return {
+                    type: 'pie',
+                    radius: [20, 60],
+                    center: ['50%','100%'],
+                    top: top + '%',
+                    height: '33.33%',
+                    left: 'center',
+                    width: 400,
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    label: {
+                        alignTo: 'edge',
+                        formatter: '{name|{b}}\n{time|{c} M}',
+                        position:'outer',
+                        alignTo:'edge',
+                        Margin: 15,
+                        edgeDistance: 10,
+                        lineHeight: 15,
+                        rich: {
+                            time: {
+                                fontSize: 10,
+                                color: '#999'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        length: 25,
+                        length2: 0,
+                        maxSurfaceAngle: 80
+                    },
+                    labelLayout: function (params) {
+                        var isLeft = params.labelRect.x < myChart.getWidth() / 2;
+                        var points = params.labelLinePoints;
+                        // Update the end point.
+                        points[2][0] = isLeft
+                        ? params.labelRect.x
+                        : params.labelRect.x + params.labelRect.width;
+                        
+                        return {
+                            labelLinePoints: points
+                        };
+                    },
+                    data: data
+                }
+            })
+        };
+    
+    // use configuration item and data specified to show chart
+    myChart.setOption(option)
+    </script>
+</body>
+</html>

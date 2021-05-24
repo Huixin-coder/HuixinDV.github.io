@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- prepare a DOM container with width and height -->
+    <div id="main" style="width: 900px;height:600px;"></div>
+    <script type="text/javascript">
+        // based on prepared DOM, initialize echarts instance
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // specify chart configuration item and data
+        var option = {
+            title: {
+                text: 'Trips by Purpose and main mode, England, 2019',
+                x:'18%',
+                textStyle:{
+                    color:'black',        //color
+                    fontStyle:'normal',     //style
+                    fontWeight:700,    //weight
+                    fontFamily:'Microsoft yahei',   
+                    fontSize:26,     //size
+                    align:'center'  //Horizontal alignment
+                },
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // Use axis to trigger tooltip
+                    type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+                }
+            },
+            legend: [
+                {
+                    x:'27%',
+                    orient: 'horizontal',
+                    bottom:'0%',
+                    data:['Walk', 'Bicycle', 'Car/Van', 'Other private transport'],
+                },
+                {
+                    x:'27%',
+                    orient: 'horizontal',
+                    bottom:'5%', 
+                    data: ['Bus','Rail','Taxi/Minicab','Other public transport']
+                }
+            ],
+            grid: {
+                left: '3%',
+                right: '4%',
+                top: '10%',
+                bottom: '15%',
+                containLabel: true
+            },
+            xAxis: {
+                max:"100",
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} %'
+                }
+            },
+            yAxis: [
+                {
+                type: 'category',
+                data: ['Commuting', 'Business', 'Education', 'Shopping', 'Other Escort', 'Personal Business', 'Leisure','Other including just walk','All purposes'],
+                axisLabel:{
+                    interval:0,
+                    rotate:40
+                }
+            }
+        ],
+            series: [
+                {
+                    name: 'Walk',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [12.14,7.14,41.60,25.41,14.46,22.73,16.19,100.00,26.23],
+                    itemStyle:{
+                        normal:{
+                            color:'#d87c7c'
+                        }
+                    },
+                },
+                {
+                    name: 'Bicycle',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [3.57,0.00,1.60,1.10,0.00,1.14,2.02,0.00,1.68],
+                    itemStyle:{
+                        normal:{
+                            color:'#919e8b'
+                        }
+                    },
+                },
+                {
+                    name: 'Car/Van',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [60.71,71.43,44.80,64.64,81.93,65.91,70.45,0.00,60.86],
+                    itemStyle:{
+                        normal:{
+                            color:'#d7ab82'
+                        }
+                    },
+                },
+                {
+                    name: 'Other private transport',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [0.71,0.00,1.60,0.55,0.00,1.14,0.81,0.00,0.73],
+                    itemStyle:{
+                        normal:{
+                            color:'#6e7074'
+                        }
+                    },
+                },
+                {
+                    name: 'Bus',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [3.57,3.57,2.40,1.66,1.20,2.27,1.62,0.00,1.89],
+                    itemStyle:{
+                        normal:{
+                            color:'#61a0a8'
+                        }
+                    },
+                },
+                {
+                    name: 'Rail',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [7.14,7.14,0.80,0.55,0.00,1.14,2.43,0.00,2.20],
+                    itemStyle:{
+                        normal:{
+                            color:'#efa18d'
+                        }
+                    },
+                },
+                {
+                    name: 'Taxi/Minicab',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [0.71,0.00,0.80,0.55,0.00,1.14,2.43,0.00,1.15],
+                    itemStyle:{
+                        normal:{
+                            color:'#787464'
+                        }
+                    },
+                },
+                {
+                    name: 'Other public transport',
+                    type: 'bar',
+                    stack: 'total',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [11.43,10.71,6.40,5.52,2.41,4.55,4.05,0.00,5.25],
+                    itemStyle:{
+                        normal:{
+                            color:'#cc7e63'
+                        }
+                    },
+                }]
+            };
+
+            // use configuration item and data specified to show chart
+        myChart.setOption(option)
+    </script>
+</body>
+</html>
+
+
+

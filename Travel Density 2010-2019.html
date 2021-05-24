@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Style circles with data_deal_sum</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css' type='text/css' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .panel {
+      font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      position: absolute;
+      width: 400px;
+      padding: 10px;
+      bottom: 0;
+      left: 50%;
+      margin-left: -200px;
+    }
+
+    .panel .panel-inner {
+      /* background-color: #fff; */
+      background-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .panel h2 {
+      line-height: 24px;
+      display: block;
+      margin: 0 0 10px;
+    }
+
+    .map-overlay-container {
+         position: absolute;
+         width: 35%;
+         top: 0;
+         left: 0px;
+         padding: 10px;
+         z-index: 1;
+    }
+
+    .map-overlay {
+         font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+         background-color: #fff;
+         border-radius: 5px;
+         padding: 10px;
+         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .map-overlay h2,
+    .map-overlay p {
+    margin: 0 0 10px;
+    }
+
+    .panel input {
+      background-color: transparent;
+      display: inline-block;
+      width: 100%;
+      position: relative;
+      margin: 0;
+      cursor: ew-resize;
+    }
+
+    .session {
+      margin-bottom: 20px;
+      }
+      
+    .row {
+      height: 12px;
+      width: 100%;
+      }
+
+    .colors {
+      background: linear-gradient(to right, #ffe5e2, #005f73, #0a9396, #94d2bd, #ee9b00, #ca6702,#9b2226);
+      margin-bottom: 5px;
+      }
+    
+    .label {
+      width: 10%;
+      display: inline-block;
+      text-align: center;
+      }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class='map-overlay-container'>
+		<div class='map-overlay'>
+		<h1>London Road Travel Density 2010-2019</h1>
+		<table><tr><td>
+		</td>
+		</tr></table>
+		<p>Data: <a href='http://data.dft.gov.uk/road-traffic/dft_traffic_counts_aadf.zip'>Road Traffic Bulk downloads for all count point locations</a> in UK from Department for Transport</p>
+  </p>
+  <div class='session'>
+    <h2>Total Travel Density by Year</h2>
+  </p>
+    <p>The travel density of each road including pedal cycles, two wheeled motor vehicles, cars and taxis, buses and coaches in one year.</p>
+    <div class='row colors'></div>
+    <div class='row labels'>
+      <div class='label'>0</div>
+      <div class='label'>2527</div>
+      <div class='label'>8527</div>
+      <div class='label'>12146</div>
+      <div class='label'>15175</div>
+      <div class='label'>19249</div>
+      <div class='label'>27897</div>
+      <div class='label'>60430+</div>
+    </div>
+  </div>
+  <!-- <div class="panel top">
+    <div class="panel-inner">
+      <h2>London Travel Density 2010-2019</h2> -->
+      <div><h2>Year <label id="num">2010</label></h2></div>
+      <!-- change the slider width to fit the panel -->
+      <input id="slider" type="range" min="0" max="9" step="1" value="0" style="width: 400px;">
+      <!-- <div id="chartContainer">
+            <p id="charttitle">Region</p>
+            <p><select id="CityMenu">
+                    <option>Change Region Here:</option>
+                </select></p>
+
+        </div> -->
+    </div>
+  </div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaHVpeGluNzUiLCJhIjoiY2tvc24xNDE2MDMxZjJwbGxjMDVubzkxeSJ9.wo9WVLwALIT-uWSLtkqPOA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      // style: 'mapbox://styles/mapbox/light-v10',
+      style: 'mapbox://styles/mapbox/light-v10',
+      // style: 'mapbox://styles/mapbox/navigation-preview-day-v4',
+      // style :'mapbox://styles/mapbox/satellite-streets-v11',
+      zoom: 9,
+      center: [-0.12599363, 51.49479144]
+    });
+
+    var geocoder = new MapboxGeocoder({
+      // Initialize the geocoder
+      accessToken: mapboxgl.accessToken, // Set the access token
+      mapboxgl: mapboxgl, // Set the mapbox-gl instance
+      marker: false, // Do not use the default marker style
+      placeholder: 'Search for places in London', // Placeholder text for the search bar
+      bbox: [-0.489,51.28,0.236,51.686], // Boundary for London
+      proximity: {
+        longitude: -0.751312,
+        latitude: 51.3035514
+      } // Coordinates of London
+    });
+
+    // Add the geocoder to the map
+    map.addControl(geocoder);
+
+    map.on('load', function () {
+
+      map.addSource('2010', {
+        type: 'vector',
+        url: 'mapbox://huixin75.36ux6ezh'
+      });
+      map.addSource('2011', {
+        type: 'vector',
+        url: 'mapbox://huixin75.4qt8egzx'
+      });
+      map.addSource('2012', {
+        type: 'vector',
+        url: 'mapbox://huixin75.awqequ0z'
+      });
+      map.addSource('2013', {
+        type: 'vector',
+        url: 'mapbox://huixin75.0j6qp7pc'
+      });
+      map.addSource('2014', {
+        type: 'vector',
+        url: 'mapbox://huixin75.2pdr0yeb'
+      });
+      map.addSource('2015', {
+        type: 'vector',
+        url: 'mapbox://huixin75.2zng1bz7'
+      });
+      map.addSource('2016', {
+        type: 'vector',
+        url: 'mapbox://huixin75.8o3ue59o'
+      });
+      map.addSource('2017', {
+        type: 'vector',
+        url: 'mapbox://huixin75.217vo12w'
+      });
+      map.addSource('2018', {
+        type: 'vector',
+        url: 'mapbox://huixin75.ck1qvwzr'
+      });
+      map.addSource('2019', {
+        type: 'vector',
+        url: 'mapbox://huixin75.1l17cfx6'
+      });
+
+      let sourceLayers = ['2010-bnrh2o', '2011-6fy1kx','2012-0876ay', '2013-bezkux','2014-8q7zsb', '2015-b9zlxi','2016-1z2jni', '2017-b9hphe', '2018-7rwkon','2019-0bspye']
+
+      function addLayer(source, source_layer) {
+        console.log(source)
+        console.log(source_layer)
+        map.addLayer({
+          'id': 'dealId',
+          'type': 'line',
+          'source': '' + source,
+          'source-layer': source_layer,
+          'paint': {
+            'line-width':2.4,
+            'line-color': [
+              'interpolate',
+              ['linear'],
+              ["to-number",['get', 'travel den']],
+              0,
+              '#ffe5e2',
+              // '#f3b344',
+              2527,
+              // '#7F3121'
+              '#005f73',
+              8527,
+              '#0a9396',
+              12146,
+              '#94d2bd',
+              15175,
+              '#ee9b00',
+              19249,
+              '#ca6702',
+              27897,
+              '#bb3e03',     
+              60430,
+              '#9b2226'    
+            ],
+          }
+        });
+      }
+      
+      addLayer(2010, sourceLayers[0])
+      // listhener slider change event.
+      document.getElementById('slider').addEventListener('input', (e) => {
+        var index = parseInt(e.target.value, 10);
+        map.removeLayer('dealId')
+        addLayer(2010 + index, sourceLayers[index])
+        document.getElementById('num').textContent = 2010 + index;
+      });
+
+
+      var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+      });
+      map.on('click', function (e) {
+        var features = map.queryRenderedFeatures(e.point);
+        let feature = features.find(f => 'dealId' === f.layer.id)
+        if (!feature) return;
+        console.log(feature);
+        const {latitude,longitude} = feature.properties;
+        popup.remove()
+      // feature.properties['travel den'] !== '' && 
+        popup.setLngLat(e.lngLat).setHTML(
+          `<div>
+            <b>Road Name</b>&nbsp;${feature.properties['Road Name']}</br>
+            <b>Road Number:</b>&nbsp;${feature.properties['Road Numbe']}</br>
+            <b>Road Type:</b>&nbsp;${feature.properties['Road Type']}</br>
+            <b>latitude:</b>&nbsp;${latitude}</br>
+            <b>longitude:</b>&nbsp;${longitude}</br>
+            <b>travel density:</b>&nbsp;${feature.properties['travel den']}</br>
+            </div>`
+               ).addTo(map);
+               });
+
+    });
+  </script>
+
+</body>
+
+</html>
