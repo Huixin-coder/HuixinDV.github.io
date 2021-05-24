@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- prepare a DOM container with width and height -->
+        <div id="main" style="width: 1280px;height:800px;"></div>
+    <script type="text/javascript">
+        // based on prepared DOM, initialize echarts instance
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // specify chart configuration item and data
+        var option = {
+            title: {
+                text: 'London Travel Density by Transportations',
+                textStyle:{
+                    color:'black',        //color
+                    fontStyle:'normal',     //style
+                    fontWeight:700,    //weight
+                    fontFamily:'Microsoft yahei',  
+                    fontSize:20,     //size
+                    align:'center'   //Horizontal alignment
+                },
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                }
+            },
+            legend: {
+                orient: 'horizontal',
+                top:'8%',
+                left:'0%',
+                right:'0%',
+                data:['Pedal Cycles','Two Wheeled Motor Vehicles','LGVs','','Cars and Taxis','Buses and Coaches','HGVs'],
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                top: '25%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ["2010","2011","2012","2013","2014","2015","2016","2017","2018","2019"]
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: 'Pedal Cycles',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [647.12,610.19,610.45,586.88,652.17,686.78,740.49,736.10,651.34,601.82],
+                    itemStyle:{
+                        normal:{
+                            color:'#c1232b'
+                        }
+                    },
+                },
+                {
+                    name: 'Two Wheeled Motor Vehicles',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [736.78,683.19,657.11,631.11,656.49,662.76,690.35,702.51,621.42,631.54],
+                    itemStyle:{
+                        normal:{
+                            color:'#27727b'
+                        }
+                    },
+                },
+                {
+                    name: 'Cars and Taxis',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [19185.49,17979.03,17421.32,17388.34,17367.00,17290.29,17024.98,17220.34,15883.72,15651.62],
+                    itemStyle:{
+                        normal:{
+                            color:'#fcce10'
+                        }
+                    },
+                },
+                {
+                    name: 'Buses and Coaches',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [723.47,703.78,706.77,696.29,673.71,668.49,691.20,673.73,586.07,578.11],
+                    itemStyle:{
+                        normal:{
+                            color:'#e87c25'
+                        }
+                    },
+                },
+                {
+                    name: 'LGVs',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [3056.99,2903.09,2878.44,3011.63,3172.74,3170.13,3386.33,3517.17,3340.63,3285.10],
+                    itemStyle:{
+                        normal:{
+                            color:'#b5c334'
+                        }
+                    },
+                },
+                {
+                    name: 'HGVs',
+                    type: 'line',
+                    stack: '总量',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: [964.76,943.91,989.05,977.21,958.24,966.91,944.19,884.59,759.38,745.09],
+                    itemStyle:{
+                        normal:{
+                            color:'#fe8463'
+                        }
+                    },
+                }]
+        };
+            
+        // use configuration item and data specified to show chart
+        myChart.setOption(option)
+    </script>
+</body>
+</html>
